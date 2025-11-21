@@ -1,0 +1,32 @@
+{
+  "name": "cellular-sequencer",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "homepage": "https://guardabrazo.github.io/cellular-sequencer",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
+  },
+  "dependencies": {
+    "classnames": "^2.5.1",
+    "lucide-react": "^0.554.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "sass": "^1.94.2",
+    "tone": "^15.1.22",
+    "zustand": "^5.0.8"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "gh-pages": "^6.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^5.0.0"
+  }
+}

@@ -179,6 +179,10 @@ body {
     transform: scale(1.1);
     z-index: 1;
   }
+
+  &.frozen {
+    opacity: 0.4;
+  }
 }
 
 .controls {
@@ -288,7 +292,6 @@ body {
   margin-right: 10px;
 
   .track-row {
-    height: 20px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -343,6 +346,42 @@ body {
 .main-layout {
   display: flex;
   flex-direction: row;
+}
+
+.freeze-controls {
+  display: grid;
+  grid-template-rows: repeat(8, 1fr);
+  gap: 2px;
+  margin-left: 10px;
+
+  .freeze-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    .freeze-btn {
+      width: 16px;
+      height: 16px;
+      font-size: 0.5rem;
+      border: 1px solid #333;
+      background: transparent;
+      color: #555;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: crosshair;
+      padding: 0;
+
+      &:hover {
+        border-color: #666;
+      }
+
+      &.active {
+        background: #fff;
+        color: #000;
+      }
+    }
+  }
 }
 
 .aesthetic-footer {

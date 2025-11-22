@@ -14,10 +14,16 @@ export const randomizeGrid = (): Grid => {
   );
 };
 
-export const evolveGrid = (grid: Grid, algorithm: Algorithm = 'GameOfLife'): Grid => {
+export const evolveGrid = (grid: Grid, algorithm: Algorithm = 'GameOfLife', frozenRows: boolean[] = []): Grid => {
   const newGrid = createEmptyGrid();
 
   for (let r = 0; r < ROWS; r++) {
+    // If this row is frozen, preserve its state
+    if (frozenRows[r]) {
+      newGrid[r] = [...grid[r]];
+      continue;
+    }
+
     for (let c = 0; c < COLS; c++) {
       let neighbors = 0;
 

@@ -29,7 +29,7 @@ function App() {
     }, [isPlaying, setIsPlaying]);
 
     const {
-        grid, toggleCell, trackMutes, trackSolos, toggleMute, toggleSolo
+        grid, toggleCell, trackMutes, trackSolos, trackFreezes, toggleMute, toggleSolo, toggleFreeze
     } = useStore();
 
     const drumLabels = ['KICK', 'SNARE', 'CH', 'OH', 'LT', 'MT', 'CLAP', 'RIDE'];
@@ -55,8 +55,10 @@ function App() {
                 rowLabels={drumLabels}
                 mutes={trackMutes}
                 solos={trackSolos}
+                freezes={trackFreezes}
                 onToggleMute={toggleMute}
                 onToggleSolo={toggleSolo}
+                onToggleFreeze={toggleFreeze}
                 title=""
             />
 

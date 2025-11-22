@@ -8,8 +8,10 @@ interface GridProps {
     rowLabels: string[];
     mutes: boolean[];
     solos: boolean[];
+    freezes: boolean[];
     onToggleMute: (index: number) => void;
     onToggleSolo: (index: number) => void;
+    onToggleFreeze: (index: number) => void;
     title: string;
 }
 
@@ -19,8 +21,10 @@ const Grid: React.FC<GridProps> = ({
     rowLabels,
     mutes,
     solos,
+    freezes,
     onToggleMute,
     onToggleSolo,
+    onToggleFreeze,
     title
 }) => {
     const { currentStep } = useStore();
@@ -79,12 +83,24 @@ const Grid: React.FC<GridProps> = ({
                                 key={`${rowIndex}-${colIndex}`}
                                 className={classNames('cell', {
                                     active: isActive,
-                                    'current-step': colIndex === currentStep
+                                    'current-step': colIndex === currentStep,
+                                    'frozen': freezes[rowIndex]
                                 })}
                                 onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
                                 onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                             />
                         ))
+                    ))}
+                </div>
+                <div className="freeze-controls">
+                    {rowLabels.map((_, i) => (
+                        <div key={i} className="freeze-row">
+                            <button
+                                className={classNames('freeze-btn', { active: freezes[i] })}
+                                onClick={() => onToggleFreeze(i)}
+                                title="Freeze Row"
+                            >F</button>
+                        </div>
                     ))}
                 </div>
             </div>

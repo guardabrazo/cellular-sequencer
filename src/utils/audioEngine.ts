@@ -139,17 +139,20 @@ Tone.Transport.scheduleRepeat((time) => {
             if (!midiEnabled) {
                 const instrument = instruments[trackIndex];
                 if (instrument) {
-                    if (instrument instanceof Tone.MembraneSynth) {
-                        instrument.triggerAttackRelease(trackIndex === 4 ? "F2" : trackIndex === 5 ? "A2" : "C1", "8n", time);
-                    } else if (instrument instanceof Tone.MetalSynth) {
+                    // Kick (0), TomLow (4), TomMid (5) -> MembraneSynth (needs note)
+                    if (trackIndex === 0 || trackIndex === 4 || trackIndex === 5) {
+                        (instrument as Tone.MembraneSynth).triggerAttackRelease(trackIndex === 4 ? "F2" : trackIndex === 5 ? "A2" : "C1", "8n", time);
+                    }
+                    // Snare (1), Clap (6) -> NoiseSynth (no note)
+                    else if (trackIndex === 1 || trackIndex === 6) {
+                        (instrument as Tone.NoiseSynth).triggerAttackRelease("8n", time);
+                    }
+                    // CH (2), OH (3), Ride (7) -> MetalSynth (needs note/freq)
+                    else if (trackIndex === 2 || trackIndex === 3 || trackIndex === 7) {
                         // MetalSynth expects (note, duration, time, velocity)
-                        // We use different notes to tune the HiHats vs Ride if needed, 
-                        // or just rely on their envelope. 
                         // CH/OH are tracks 2 and 3. Ride is track 7.
                         const note = trackIndex === 7 ? "C4" : "200Hz";
-                        instrument.triggerAttackRelease(note, "32n", time, 0.3);
-                    } else if (instrument instanceof Tone.NoiseSynth) {
-                        instrument.triggerAttackRelease("8n", time);
+                        (instrument as Tone.MetalSynth).triggerAttackRelease(note, "32n", time, 0.3);
                     }
                 }
             }

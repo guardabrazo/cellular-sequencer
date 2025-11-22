@@ -17,6 +17,7 @@ interface AppState {
     pingPongDirection: 'Forward' | 'Reverse'; // Internal state for PingPong
     trackMutes: boolean[];
     trackSolos: boolean[];
+    trackFreezes: boolean[];
     effects: {
         reverb: { wet: number; decay: number };
         delay: { wet: number; time: string; feedback: number };
@@ -40,6 +41,7 @@ interface AppState {
     setPlaybackDirection: (dir: 'Forward' | 'Reverse' | 'PingPong') => void;
     toggleMute: (trackIndex: number) => void;
     toggleSolo: (trackIndex: number) => void;
+    toggleFreeze: (trackIndex: number) => void;
     setEffectParam: (effect: 'reverb' | 'delay', param: string, value: number | string) => void;
 }
 
@@ -58,6 +60,7 @@ export const useStore = create<AppState>((set) => ({
     pingPongDirection: 'Forward',
     trackMutes: Array(8).fill(false),
     trackSolos: Array(8).fill(false),
+    trackFreezes: Array(8).fill(false),
     effects: {
         reverb: { wet: 0, decay: 0.6 },
         delay: { wet: 0, time: '8n', feedback: 0.5 }
@@ -108,6 +111,12 @@ export const useStore = create<AppState>((set) => ({
         return { trackSolos: newSolos };
     }),
 
+    toggleFreeze: (trackIndex) => set((state) => {
+        const newFreezes = [...state.trackFreezes];
+        newFreezes[trackIndex] = !newFreezes[trackIndex];
+        return { trackFreezes: newFreezes };
+    }),
+
     setEffectParam: (effect, param, value) => set((state) => ({
         effects: {
             ...state.effects,
@@ -149,7 +158,7 @@ export const useStore = create<AppState>((set) => ({
         let nextStepsSinceLastEvolution = state.stepsSinceLastEvolution + 1;
 
         if (!state.isEvolutionPaused && nextStepsSinceLastEvolution >= state.evolutionSpeed) {
-            nextGrid = evolveGrid(state.grid, state.algorithm);
+            nextGrid = evolveGrid(state.grid, state.algorithm, state.trackFreezes);
             nextStepsSinceLastEvolution = 0;
         }
 

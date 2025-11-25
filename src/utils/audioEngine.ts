@@ -1,9 +1,17 @@
 import * as Tone from 'tone';
 import { useStore } from '../store';
 
+// Import samples
+import kickSample from '../assets/samples/kick.wav';
+import snareSample from '../assets/samples/snare.wav';
+import chSample from '../assets/samples/ch.wav';
+import ohSample from '../assets/samples/oh.wav';
+import ltSample from '../assets/samples/lt.wav';
+import mtSample from '../assets/samples/mt.wav';
+import clapSample from '../assets/samples/clap.wav';
+import rideSample from '../assets/samples/ride.wav';
+
 // Effects
-// Effects
-// Using Tone.Reverb for better quality
 const reverb = new Tone.Reverb({
     decay: 2.5,
     preDelay: 0.2,
@@ -16,61 +24,15 @@ const delay = new Tone.FeedbackDelay({
     wet: 0
 }).connect(reverb);
 
-// 909-like Synth setup - Connect to Delay (Chain: Inst -> Delay -> Reverb -> Out)
-const kick = new Tone.MembraneSynth({
-    pitchDecay: 0.05,
-    octaves: 10,
-    oscillator: { type: "sine" },
-    envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-}).connect(delay);
-
-const snare = new Tone.NoiseSynth({
-    noise: { type: "white" },
-    envelope: { attack: 0.001, decay: 0.2, sustain: 0 }
-}).connect(delay);
-
-const hihatClosed = new Tone.MetalSynth({
-    envelope: { attack: 0.001, decay: 0.1, release: 0.01 },
-    harmonicity: 5.1,
-    modulationIndex: 32,
-    resonance: 4000,
-    octaves: 1.5
-}).connect(delay);
-
-const hihatOpen = new Tone.MetalSynth({
-    envelope: { attack: 0.001, decay: 0.5, release: 0.1 },
-    harmonicity: 5.1,
-    modulationIndex: 32,
-    resonance: 4000,
-    octaves: 1.5
-}).connect(delay);
-
-const tomLow = new Tone.MembraneSynth({
-    pitchDecay: 0.05,
-    octaves: 4,
-    oscillator: { type: "sine" },
-    envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-}).connect(delay);
-
-const tomMid = new Tone.MembraneSynth({
-    pitchDecay: 0.05,
-    octaves: 4,
-    oscillator: { type: "sine" },
-    envelope: { attack: 0.001, decay: 0.4, sustain: 0.01, release: 1.4 }
-}).connect(delay);
-
-const clap = new Tone.NoiseSynth({
-    noise: { type: 'pink' },
-    envelope: { attack: 0.001, decay: 0.3, sustain: 0 }
-}).connect(delay);
-
-const ride = new Tone.MetalSynth({
-    envelope: { attack: 0.001, decay: 1, release: 0.1 },
-    harmonicity: 5.1,
-    modulationIndex: 32,
-    resonance: 4000,
-    octaves: 1.5
-}).connect(delay);
+// Sample-based Players - Connect to Delay (Chain: Player -> Delay -> Reverb -> Out)
+const kick = new Tone.Player(kickSample).connect(delay);
+const snare = new Tone.Player(snareSample).connect(delay);
+const hihatClosed = new Tone.Player(chSample).connect(delay);
+const hihatOpen = new Tone.Player(ohSample).connect(delay);
+const tomLow = new Tone.Player(ltSample).connect(delay);
+const tomMid = new Tone.Player(mtSample).connect(delay);
+const clap = new Tone.Player(clapSample).connect(delay);
+const ride = new Tone.Player(rideSample).connect(delay);
 
 const instruments = [kick, snare, hihatClosed, hihatOpen, tomLow, tomMid, clap, ride];
 const midiNotes = [36, 38, 42, 46, 41, 45, 39, 51]; // General MIDI mapping
@@ -139,21 +101,8 @@ Tone.Transport.scheduleRepeat((time) => {
             if (!midiEnabled) {
                 const instrument = instruments[trackIndex];
                 if (instrument) {
-                    // Kick (0), TomLow (4), TomMid (5) -> MembraneSynth (needs note)
-                    if (trackIndex === 0 || trackIndex === 4 || trackIndex === 5) {
-                        (instrument as Tone.MembraneSynth).triggerAttackRelease(trackIndex === 4 ? "F2" : trackIndex === 5 ? "A2" : "C1", "8n", time);
-                    }
-                    // Snare (1), Clap (6) -> NoiseSynth (no note)
-                    else if (trackIndex === 1 || trackIndex === 6) {
-                        (instrument as Tone.NoiseSynth).triggerAttackRelease("8n", time);
-                    }
-                    // CH (2), OH (3), Ride (7) -> MetalSynth (needs note/freq)
-                    else if (trackIndex === 2 || trackIndex === 3 || trackIndex === 7) {
-                        // MetalSynth expects (note, duration, time, velocity)
-                        // CH/OH are tracks 2 and 3. Ride is track 7.
-                        const note = trackIndex === 7 ? "C4" : "200Hz";
-                        (instrument as Tone.MetalSynth).triggerAttackRelease(note, "32n", time, 0.3);
-                    }
+                    // Players use .start() method with time parameter
+                    instrument.start(time);
                 }
             }
 

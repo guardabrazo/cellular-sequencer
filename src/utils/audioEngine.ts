@@ -109,12 +109,18 @@ Tone.Transport.scheduleRepeat((time) => {
             // MIDI (Channel 1 / 0x90)
             if (midiEnabled && midiOutput) {
                 const note = midiNotes[trackIndex];
-                midiOutput.send([0x90, note, 0x7f]); // Note On
+
+                // Calculate precise timestamp
+                // time is the scheduled time in AudioContext seconds
+                // Tone.now() is the current AudioContext time
+                // performance.now() is the current DOMHighResTimeStamp
+                const now = Tone.now();
+                const midiTimestamp = performance.now() + (time - now) * 1000;
+
+                midiOutput.send([0x90, note, 0x7f], midiTimestamp); // Note On
 
                 // Note Off after 100ms
-                setTimeout(() => {
-                    midiOutput?.send([0x80, note, 0x40]);
-                }, 100);
+                midiOutput.send([0x80, note, 0x40], midiTimestamp + 100);
             }
         }
     });

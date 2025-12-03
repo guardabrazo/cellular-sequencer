@@ -5,7 +5,11 @@ import { useStore } from './store';
 import { startSequencer, stopSequencer, initAudio } from './utils/audioEngine';
 
 function App() {
-    const { isPlaying, setIsPlaying } = useStore();
+    const { isPlaying, setIsPlaying, theme } = useStore();
+
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
 
     useEffect(() => {
         const handleKeyDown = async (e: KeyboardEvent) => {

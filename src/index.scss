@@ -1,4 +1,5 @@
 :root {
+  /* Dark Theme (Default) */
   --bg-color: #050505;
   --grid-color: #1a1a1a;
   --cell-inactive: #111;
@@ -6,7 +7,44 @@
   --cell-highlight: #444;
   --accent: #fff;
   --text-color: #eee;
+  --text-muted: #888;
+  --border-color: #333;
+  --border-color-light: #666;
+  --border-color-highlight: #fff;
+  --button-bg: transparent;
+  --button-text: #fff;
+  --button-hover-bg: #fff;
+  --button-hover-text: #000;
+  --input-bg: transparent;
+  --input-text: #fff;
+  --slider-track: #333;
+  --slider-thumb: #fff;
   --font-main: 'Helvetica Neue', 'Arial', sans-serif;
+  --grid-dot-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme='light'] {
+  /* Light Theme */
+  --bg-color: #f4f4f4;
+  --grid-color: #e0e0e0;
+  --cell-inactive: #fff;
+  --cell-active: #000;
+  --cell-highlight: #ddd;
+  --accent: #000;
+  --text-color: #111;
+  --text-muted: #666;
+  --border-color: #ccc;
+  --border-color-light: #999;
+  --border-color-highlight: #000;
+  --button-bg: transparent;
+  --button-text: #000;
+  --button-hover-bg: #000;
+  --button-hover-text: #fff;
+  --input-bg: transparent;
+  --input-text: #000;
+  --slider-track: #ccc;
+  --slider-thumb: #000;
+  --grid-dot-color: rgba(0, 0, 0, 0.05);
 }
 
 body {
@@ -37,12 +75,12 @@ body {
   flex-direction: column;
   gap: 0.5rem;
   padding: 2rem;
-  border: 1px solid #333;
+  border: 1px solid var(--border-color);
   position: relative;
   max-width: 95vw;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(90deg, var(--grid-dot-color) 1px, transparent 1px),
+    linear-gradient(var(--grid-dot-color) 1px, transparent 1px);
   background-size: 20px 20px;
   /* Subtle grid background */
 
@@ -52,7 +90,7 @@ body {
     position: absolute;
     width: 10px;
     height: 10px;
-    border: 1px solid #fff;
+    border: 1px solid var(--border-color-highlight);
     transition: all 0.2s ease;
   }
 
@@ -89,7 +127,7 @@ body {
     align-items: center;
     gap: 1rem;
     font-size: 0.6rem;
-    color: #666;
+    color: var(--text-muted);
   }
 
   h1 {
@@ -98,13 +136,13 @@ body {
     margin: 0;
     font-weight: normal;
     /* Not bold */
-    color: #fff;
+    color: var(--text-color);
   }
 
   .crosshair {
     width: 15px;
     height: 15px;
-    border: 1px solid #666;
+    border: 1px solid var(--border-color-light);
     border-radius: 50%;
     position: relative;
 
@@ -112,7 +150,7 @@ body {
     &::after {
       content: '';
       position: absolute;
-      background: #666;
+      background: var(--border-color-light);
     }
 
     &::before {
@@ -133,18 +171,18 @@ body {
   }
 
   .badge {
-    border: 1px solid #fff;
+    border: 1px solid var(--border-color-highlight);
     border-radius: 10px;
     padding: 2px 8px;
     font-size: 0.5rem;
-    color: #fff;
+    color: var(--text-color);
   }
 }
 
 .decorative-line {
   width: 100%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, #333, transparent);
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
   margin-bottom: 0.5rem;
 }
 
@@ -159,23 +197,23 @@ body {
   /* Increased cell size */
   height: 24px;
   background-color: var(--cell-inactive);
-  border: 1px solid #222;
+  border: 1px solid var(--border-color);
   cursor: crosshair;
   /* Consistent cursor */
   /* transition: background-color 0.1s, transform 0.1s; */
   /* Removed to prevent glitches */
 
   &:hover {
-    border-color: #555;
+    border-color: var(--border-color-light);
   }
 
   &.active {
     background-color: var(--cell-active);
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 5px rgba(var(--cell-active), 0.5);
   }
 
   &.current-step {
-    border-color: #fff;
+    border-color: var(--border-color-highlight);
     transform: scale(1.1);
     z-index: 1;
   }
@@ -204,10 +242,11 @@ body {
       opacity: 0.8;
       letter-spacing: 1px;
       font-weight: normal;
-      border-bottom: 1px solid #333;
+      border-bottom: 1px solid var(--border-color);
       padding-bottom: 2px;
       margin-bottom: 4px;
       width: 100%;
+      color: var(--text-color);
     }
 
     .row {
@@ -218,9 +257,9 @@ body {
   }
 
   button {
-    background: transparent;
-    border: 1px solid #fff;
-    color: #fff;
+    background: var(--button-bg);
+    border: 1px solid var(--button-text);
+    color: var(--button-text);
     padding: 0.4rem 0.8rem;
     font-family: var(--font-main);
     cursor: crosshair;
@@ -233,13 +272,13 @@ body {
     justify-content: center;
 
     &:hover {
-      background: #fff;
-      color: #000;
+      background: var(--button-hover-bg);
+      color: var(--button-hover-text);
     }
 
     &.active {
-      background: #fff;
-      color: #000;
+      background: var(--button-hover-bg);
+      color: var(--button-hover-text);
     }
   }
 
@@ -252,6 +291,7 @@ body {
       font-size: 0.6rem;
       text-transform: uppercase;
       opacity: 0.7;
+      color: var(--text-color);
     }
 
     input[type="range"] {
@@ -259,7 +299,7 @@ body {
       appearance: none;
       width: 80px;
       height: 2px;
-      background: #333;
+      background: var(--slider-track);
       outline: none;
       cursor: crosshair;
 
@@ -267,16 +307,16 @@ body {
         -webkit-appearance: none;
         width: 8px;
         height: 8px;
-        background: #fff;
+        background: var(--slider-thumb);
         cursor: crosshair;
       }
     }
   }
 
   select {
-    background: #000;
-    color: #fff;
-    border: 1px solid #333;
+    background: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--border-color);
     padding: 0.3rem;
     font-family: var(--font-main);
     font-size: 0.7rem;
@@ -302,15 +342,16 @@ body {
       opacity: 0.5;
       width: 40px;
       text-align: right;
+      color: var(--text-color);
     }
 
     .track-btn {
       width: 16px;
       height: 16px;
       font-size: 0.5rem;
-      border: 1px solid #333;
+      border: 1px solid var(--border-color);
       background: transparent;
-      color: #555;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -318,26 +359,23 @@ body {
       padding: 0;
 
       &:hover {
-        border-color: #666;
+        border-color: var(--border-color-light);
       }
 
       &.active {
-        background: #fff;
-        color: #000;
+        background: var(--button-hover-bg);
+        color: var(--button-hover-text);
       }
 
       &.solo.active {
-        background: #fff;
-        color: #000;
-        /* Black and white as requested */
+        background: var(--button-hover-bg);
+        color: var(--button-hover-text);
       }
 
       &.mute.active {
-        background: #fff;
-        color: #000;
-        /* Black and white as requested */
+        background: var(--button-hover-bg);
+        color: var(--button-hover-text);
         text-decoration: line-through;
-        /* Optional: Add strikethrough for mute to distinguish? Or just rely on 'M' */
       }
     }
   }
@@ -363,9 +401,9 @@ body {
       width: 16px;
       height: 16px;
       font-size: 0.5rem;
-      border: 1px solid #333;
+      border: 1px solid var(--border-color);
       background: transparent;
-      color: #555;
+      color: var(--text-muted);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -373,12 +411,12 @@ body {
       padding: 0;
 
       &:hover {
-        border-color: #666;
+        border-color: var(--border-color-light);
       }
 
       &.active {
-        background: #fff;
-        color: #000;
+        background: var(--button-hover-bg);
+        color: var(--button-hover-text);
       }
     }
   }
@@ -389,13 +427,13 @@ body {
   justify-content: space-between;
   width: 100%;
   margin-top: 1rem;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--border-color);
   padding-top: 1rem;
   font-family: 'Helvetica Neue', sans-serif;
   /* Strict sans */
   font-size: 0.6rem;
   letter-spacing: 1px;
-  color: #888;
+  color: var(--text-muted);
 
   .footer-block {
     display: flex;
@@ -404,9 +442,9 @@ body {
   }
 
   .box-border {
-    border: 1px solid #fff;
+    border: 1px solid var(--border-color-highlight);
     padding: 2px 6px;
-    color: #fff;
+    color: var(--text-color);
     font-weight: normal;
     /* Was bold, user requested not "black" (likely bold) */
     display: flex;
@@ -427,23 +465,23 @@ body {
 
     p {
       margin: 0;
-      color: #aaa;
+      color: var(--text-muted);
     }
 
     p:first-child {
-      color: #fff;
+      color: var(--text-color);
     }
   }
 
   .dimensions {
     display: flex;
     flex-direction: column;
-    border-left: 1px solid #fff;
+    border-left: 1px solid var(--border-color-highlight);
     padding-left: 10px;
 
     span {
       line-height: 1.2;
-      color: #aaa;
+      color: var(--text-muted);
     }
   }
 
@@ -451,7 +489,7 @@ body {
     display: flex;
     flex-direction: column;
     text-align: right;
-    border-left: 1px solid #333;
+    border-left: 1px solid var(--border-color);
     /* Separator */
     padding-left: 10px;
 
@@ -509,11 +547,11 @@ body {
     }
 
     &::-webkit-scrollbar-track {
-      background: #111;
+      background: var(--cell-inactive);
     }
 
     &::-webkit-scrollbar-thumb {
-      background: #444;
+      background: var(--cell-highlight);
     }
   }
 
@@ -552,7 +590,7 @@ body {
       text-align: left;
       border-left: none;
       padding-left: 0;
-      border-top: 1px solid #333;
+      border-top: 1px solid var(--border-color);
       padding-top: 10px;
       width: 100%;
     }
@@ -560,7 +598,7 @@ body {
     .dimensions {
       border-left: none;
       padding-left: 0;
-      border-top: 1px solid #fff;
+      border-top: 1px solid var(--border-color-highlight);
       padding-top: 10px;
       width: 100%;
     }

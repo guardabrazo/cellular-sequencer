@@ -21,7 +21,9 @@ const Controls: React.FC = () => {
         playbackDirection,
         setPlaybackDirection,
         effects,
-        setEffectParam
+        setEffectParam,
+        theme,
+        setTheme
     } = useStore();
 
     useEffect(() => {
@@ -154,6 +156,20 @@ const Controls: React.FC = () => {
                     <button onClick={toggleMidi} className={midiEnabled ? 'active' : ''} title="Toggle MIDI">
                         {midiEnabled ? <Radio size={14} /> : <Music size={14} />}
                     </button>
+                </div>
+            </div>
+
+            <div className="section">
+                <h3>THEME</h3>
+                <div className="row">
+                    <select
+                        value={theme}
+                        onChange={(e) => setTheme(e.target.value as any)}
+                        title="Theme"
+                    >
+                        <option value="dark">DARK</option>
+                        <option value="light">LIGHT</option>
+                    </select>
                 </div>
             </div>
         </div>

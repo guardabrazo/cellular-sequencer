@@ -9,6 +9,7 @@ interface AppState {
     evolutionSpeed: number; // Steps per evolution
     stepsSinceLastEvolution: number;
     midiEnabled: boolean;
+    theme: 'dark' | 'light';
 
     // V2 Features
     isEvolutionPaused: boolean;
@@ -33,6 +34,7 @@ interface AppState {
     setBpm: (bpm: number) => void;
     setCurrentStep: (step: number) => void;
     toggleMidi: () => void;
+    setTheme: (theme: 'dark' | 'light') => void;
     tick: () => void; // Called every sequencer step
 
     // V2 Actions
@@ -53,6 +55,7 @@ export const useStore = create<AppState>((set) => ({
     evolutionSpeed: 16, // Evolve every bar (16 steps) by default
     stepsSinceLastEvolution: 0,
     midiEnabled: false,
+    theme: 'dark',
 
     isEvolutionPaused: false,
     algorithm: 'GameOfLife',
@@ -92,6 +95,8 @@ export const useStore = create<AppState>((set) => ({
     setCurrentStep: (currentStep) => set({ currentStep }),
 
     toggleMidi: () => set((state) => ({ midiEnabled: !state.midiEnabled })),
+
+    setTheme: (theme) => set({ theme }),
 
     toggleEvolutionPause: () => set((state) => ({ isEvolutionPaused: !state.isEvolutionPaused })),
 

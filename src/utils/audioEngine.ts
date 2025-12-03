@@ -40,6 +40,10 @@ const midiNotes = [36, 38, 42, 46, 41, 45, 39, 51]; // General MIDI mapping
 let midiOutput: MIDIOutput | null = null;
 
 export const initAudio = async () => {
+    // Optimize for low latency to improve MIDI sync
+    // Tone.context.latencyHint = 'interactive'; // Cannot be set after context creation
+    Tone.context.lookAhead = 0.05; // Reduce lookahead (default is 0.1)
+
     await Tone.start();
     await reverb.generate(); // Generate impulse response for Reverb
     console.log('Audio ready');
@@ -111,11 +115,21 @@ Tone.Transport.scheduleRepeat((time) => {
                 const note = midiNotes[trackIndex];
 
                 // Calculate precise timestamp
-                // time is the scheduled time in AudioContext seconds
-                // Tone.now() is the current AudioContext time
-                // performance.now() is the current DOMHighResTimeStamp
-                const now = Tone.now();
-                const midiTimestamp = performance.now() + (time - now) * 1000;
+                // Try to use getOutputTimestamp for better synchronization if available
+                // Fallback to performance.now() + delta if not supported
+                let midiTimestamp;
+                const rawContext = Tone.context.rawContext as AudioContext;
+
+                if (typeof rawContext.getOutputTimestamp === 'function') {
+                    const timestamp = rawContext.getOutputTimestamp();
+                    const performanceTime = timestamp.performanceTime || performance.now();
+                    const contextTime = timestamp.contextTime || Tone.now();
+                    midiTimestamp = performanceTime + (time - contextTime) * 1000;
+                } else {
+                    // Fallback
+                    const now = Tone.now();
+                    midiTimestamp = performance.now() + (time - now) * 1000;
+                }
 
                 midiOutput.send([0x90, note, 0x7f], midiTimestamp); // Note On
 
